@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+
+  django:
+    build: .
+    # Loading the app is defined here to allow for
+    # autoreload on changes it is mounted on top of the
+    # old copy that docker added when creating the image
+    volumes:
+      - '.:/usr/src/onsdi'
+    environment:
+      - DEBUG=False
+      - GEONODE_LB_HOST_IP=localhost
+      - GEONODE_LB_PORT=80
+      - SITEURL=http://localhost/
+      - ALLOWED_HOSTS=['geonode', '127.0.0.1','localhost','$HTTPS_HOST','$HTTP_HOST']
+      - SECRET_KEY=${SECRET_KEY}
+
+  geoserver:
+    environment:
+      - HTTPS_HOST=${HTTPS_HOST}
+      - HTTPS_PORT=${HTTPS_PORT}
+      - HTTP_HOST=${HTTP_HOST}
+      - HTTP_PORT=${HTTP_PORT}
+  #    - NGINX_BASE_URL=
